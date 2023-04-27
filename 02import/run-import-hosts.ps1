@@ -1,8 +1,8 @@
 # Smart-1 Cloud mtets2 credetials
-& ../.env-mtest2.ps1
+. ../.env-mtest2.ps1
 
 # to filter hosts by tag
-$batchTag = "pavel123"
+$batchTag = "budapest123"
 
 # POST {{server}}/login
 # Content-Type: application/json

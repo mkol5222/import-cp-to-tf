@@ -1,6 +1,6 @@
 # Smart-1 Cloud mtets2 credetials
-& ../.env-mtest2.ps1
-$batchTag = "pavel123"
+. ../.env-mtest2.ps1
+$batchTag = "budapest123"
 
 # POST {{server}}/login
 # Content-Type: application/json
@@ -28,10 +28,10 @@ $sid = $login.sid
 
 
 # for loop for n between A and B
-for ($i=31; $i -le 40; $i++) {
+for ($i=51; $i -le 60; $i++) {
     $hostPayload = @{
         name = "Internal_Host_$i"
-        'ip-address' = "10.10.95.$i"
+        'ip-address' = "10.10.94.$i"
         "set-if-exists" = "true"
         'tags' = @($batchTag)
     } | ConvertTo-Json
@@ -71,3 +71,18 @@ $listedHosts = Invoke-RestMethod -Uri "https://$server/$cloud_mgmt_id/$context/s
     -Headers @{"X-chkp-sid" = $sid} `
     -Body "{`"filter`":`"$batchTag`"}"
 $listedHosts.objects | select name, 'ipv4-address', tags | ft
+
+# POST {{server}}/show-networks
+# Content-Type: application/json
+# X-chkp-sid: {{session}}
+
+# {
+#   "limit" : 50,
+#   "offset" : 0,
+#   "details-level" : "standard"
+# }
+
+$networks = Invoke-RestMethod -Uri "https://$server/$cloud_mgmt_id/$context/show-networks" `
+    -Method Post -ContentType "application/json" `
+    -Headers @{"X-chkp-sid" = $sid} `
+    -Body "{`"limit`":`"50`",`"offset`":`"0`",`"details-level`":`"standard`"}"

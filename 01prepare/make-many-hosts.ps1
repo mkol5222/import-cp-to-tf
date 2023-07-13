@@ -1,6 +1,6 @@
 # Smart-1 Cloud mtets2 credetials
 . ../.env-mtest2.ps1
-$batchTag = "budapest123"
+$batchTag = "athens1"
 
 # POST {{server}}/login
 # Content-Type: application/json
@@ -28,10 +28,10 @@ $sid = $login.sid
 
 
 # for loop for n between A and B
-for ($i=51; $i -le 60; $i++) {
+for ($i=61; $i -le 70; $i++) {
     $hostPayload = @{
         name = "Internal_Host_$i"
-        'ip-address' = "10.10.94.$i"
+        'ip-address' = "10.10.70.$i"
         "set-if-exists" = "true"
         'tags' = @($batchTag)
     } | ConvertTo-Json
@@ -86,3 +86,24 @@ $networks = Invoke-RestMethod -Uri "https://$server/$cloud_mgmt_id/$context/show
     -Method Post -ContentType "application/json" `
     -Headers @{"X-chkp-sid" = $sid} `
     -Body "{`"limit`":`"50`",`"offset`":`"0`",`"details-level`":`"standard`"}"
+
+
+#     POST {{server}}/show-access-rulebase
+# Content-Type: application/json
+# X-chkp-sid: {{session}}
+
+# {
+#   "offset" : 0,
+#   "limit" : 20,
+#   "name" : "Network",
+#   "details-level" : "standard",
+#   "use-object-dictionary" : true
+# }
+
+$rulebase = Invoke-RestMethod -Uri "https://$server/$cloud_mgmt_id/$context/show-access-rulebase" `
+    -Method Post -ContentType "application/json" `
+    -Headers @{"X-chkp-sid" = $sid} `
+    -Body "{`"offset`":`"0`",`"limit`":`"20`",`"name`":`"Network`",`"details-level`":`"standard`",`"use-object-dictionary`":`"true`"}"
+
+$rulebase.rulebase | select name, action, source, destination, service, track | ft
+$rulebase."objects-dictionary" | select name, type, 'ipv4-address', tags | ft

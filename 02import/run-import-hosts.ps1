@@ -2,7 +2,7 @@
 . ../.env-mtest2.ps1
 
 # to filter hosts by tag
-$batchTag = "budapest123"
+$batchTag = "athens1"
 
 # POST {{server}}/login
 # Content-Type: application/json
